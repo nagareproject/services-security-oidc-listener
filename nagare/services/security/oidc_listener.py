@@ -34,4 +34,6 @@ class Service(plugin.Plugin):
                     params['session_id'] = session_id
                     params['state_id'] = state_id
 
+                    request.is_authenticated = True
+
         return chain.next(request=request, **params)
