@@ -1,7 +1,7 @@
 # Encoding: utf-8
 
 # --
-# Copyright (c) 2008-2022 Net-ng.
+# Copyright (c) 2008-2023 Net-ng.
 # All rights reserved.
 #
 # This software is licensed under the BSD License, as described in
@@ -24,8 +24,14 @@ class Service(plugin.Plugin):
         self.oidc_services[ident] = oidc_service
 
     def handle_request(self, chain, request, **params):
+        code = request.params.get('code')
         state = request.params.get('state')
-        if state and ('code' in request.params):
+
+        if state and code:
+            self.logger.debug('Authentication response: %s / %s', state, code)
+            if state.count('#') != 2:
+                raise ValueError('Invalid authentication response: %s / %s' % (state, code))
+
             oidc_service_ident = state.split('#')[1]
             oidc_service = self.oidc_services.get(oidc_service_ident)
             if oidc_service is not None:

@@ -1,0 +1,2 @@
+[nagare.services]
+oidc_listener = nagare.services.security.oidc_listener:Service
